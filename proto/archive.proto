@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package archive;
+
+option go_package = "./protos";
+
+service ArchiveZipService {
+  rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse);
+  rpc AddFiles(AddFilesRequest) returns (AddFilesResponse);
+  rpc GetTaskStatus(GetTaskStatusRequest) returns (GetTaskStatusResponse);
+  rpc DownloadArchive(DownloadArchiveRequest) returns (DownloadArchiveResponse);
+}
+
+message CreateTaskRequest {}
+
+message CreateTaskResponse {
+  string task_id = 1;
+  string status = 2;
+}
+
+message AddFilesRequest {
+  string task_id = 1;
+  repeated string urls = 2;
+}
+
+message AddFilesResponse {
+  string status = 2;
+  repeated string failed_urls = 3;
+}
+
+message GetTaskStatusRequest {
+  string task_id = 1;
+}
+
+message GetTaskStatusResponse {
+  string task_id = 1;
+  string status = 2;
+  repeated string failed_urls = 3;
+}
+
+message DownloadArchiveRequest {
+  string task_id = 1;
+}
+
+message DownloadArchiveResponse {
+  bytes archive_data = 1;
+  string filename = 2;
+}
