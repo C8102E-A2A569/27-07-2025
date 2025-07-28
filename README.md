@@ -3,10 +3,10 @@
 **gRPC-сервис для скачивания файлов по URL и упаковки их в ZIP архив**
 
 Функциональность: 
-- CreateTask -- создание задачи, в которую потом можно добавить файлы
-- AddFiles -- скачивает файлы по URL в заданном формате(.pdf, .jpeg, .jpg) и добавляет их в задачу
-- GetTaskStatus -- получить статус задачи: created, processing, completed, failed
-- DownloadArchive -- выдает готовый ZIP архив
+- CreateTask — создание задачи, в которую потом можно добавить файлы
+- AddFiles — скачивает файлы по URL в заданном формате(.pdf, .jpeg, .jpg) и добавляет их в задачу
+- GetTaskStatus — получить статус задачи: created, processing, completed, failed
+- DownloadArchive — выдает готовый ZIP архив
 
 Ограничения: 
 - возможно добавить только 3 файла в задачу
@@ -20,6 +20,7 @@
 - `internal/service` — реализация gRPC-сервиса(основные методы системы)
 - `proto/archive.proto`
 - `test/integration-test.go` — интеграционный тест
+- `archives` — в этой папке хранятся добавленные zip архивы
 
 Запуск: 
 1. `go run cmd/main.go` 
