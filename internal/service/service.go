@@ -61,7 +61,7 @@ func (s *Service) AddFiles(ctx context.Context, req *proto.AddFilesRequest) (*pr
 	s.mu.Lock()
 	task.FailedURLs = append(task.FailedURLs, failedURLs...)
 
-	if len(task.Files) == s.config.Limits.MaxFilesPerTask {
+	if len(task.Files) >= s.config.Limits.MaxFilesPerTask {
 		go s.processTask(task.ID)
 	} else {
 		task.Status = model.StatusCreated
@@ -146,7 +146,13 @@ func (s *Service) CreateTask(ctx context.Context, req *proto.CreateTaskRequest) 
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	if len(s.tasks) >= s.config.Limits.MaxTasks {
+	activeTaskCnt := 0
+	for _, task := range s.tasks {
+		if task.Status == model.StatusCreated || task.Status == model.StatusProcessing {
+			activeTaskCnt++
+		}
+	}
+	if activeTaskCnt >= s.config.Limits.MaxTasks {
 		return nil, status.Error(codes.ResourceExhausted, "server is busy")
 	}
 
