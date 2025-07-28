@@ -37,7 +37,6 @@ func (d *Downloader) Download(ctx context.Context, url string) ([]byte, string, 
 		return nil, "", err
 	}
 	resp, err := d.client.Do(req)
-
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {

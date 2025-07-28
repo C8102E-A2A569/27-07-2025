@@ -21,12 +21,13 @@ func main() {
 		log.Fatal("failed to listen:", err)
 	}
 
-	s := grpc.NewServer()
+	msgMaxSize := 100 * 1024 * 1024 //это нужно для увеличения сообщения grpc сервера
+	s := grpc.NewServer(grpc.MaxRecvMsgSize(msgMaxSize))
 	archiveZipService := service.New(cfg)
 	proto.RegisterArchiveZipServiceServer(s, archiveZipService)
 
 	log.Printf("gRPC server started on :%d", cfg.Server.Port)
 	if err := s.Serve(lis); err != nil {
-		log.Fatal("Failed to serve:", err)
+		log.Fatal("failed to serve:", err)
 	}
 }
