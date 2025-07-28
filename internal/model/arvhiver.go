@@ -9,11 +9,9 @@ import (
 
 func CreateArchive(task *Task) (string, error) {
 	if len(task.Files) == 0 {
-		return "", fmt.Errorf("no files to archive")
+		return "", fmt.Errorf("no files")
 	}
-	if err := os.MkdirAll("archives", 0755); err != nil {
-		return "", err
-	}
+	os.MkdirAll("archives", 0755)
 	archivePath := filepath.Join("archives", task.ID+".zip")
 
 	file, err := os.Create(archivePath)
@@ -22,16 +20,15 @@ func CreateArchive(task *Task) (string, error) {
 	}
 	defer file.Close()
 
-	writer := zip.NewWriter(file)
-	defer writer.Close()
+	wr := zip.NewWriter(file)
+	defer wr.Close()
 
-	for _, fileItem := range task.Files {
-		zipFile, err := writer.Create(fileItem.Filename)
+	for _, f := range task.Files {
+		zipFile, err := wr.Create(f.Filename)
 		if err != nil {
 			return "", err
 		}
-
-		_, err = zipFile.Write(fileItem.Data)
+		zipFile.Write(f.Data)
 	}
 	return archivePath, nil
 }
